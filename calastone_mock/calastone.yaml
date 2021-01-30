@@ -1,0 +1,347 @@
+openapi: 3.0.0
+info:
+  description: |
+    calastone api documents
+  version: 1.0.0
+  title: Calastone
+
+paths:
+  /orders/subcription: 
+    post:
+      summary: subscribe instruments
+      description: subscribe to one or more financial instruments,
+      operationId: instrumentsSub
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subcripDetails'
+      responses:
+        '201':
+          description: successful order subcription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subcriptionResponce'
+                
+  /orders/redemption:
+    post:
+      summary: redemption instruments
+      description: redemption to one or more financial instruments,
+      operationId: instrumentsRed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/redemptionDetails'
+        
+        
+      responses:
+        '201':
+          description: successful order redemption
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/redemptionResponce' 
+
+  '/orders':
+    get:
+      summary: all orders
+      description: get all the orders from last 5 days
+      operationId: getordersall
+      responses:
+        '200':
+          description: Basic User info for auth purpose
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Orderdescription'
+
+  '/orders/{updated}':
+    get:
+      summary: order inthe date
+      description: get all the orders from given date
+      operationId: getordersDate
+      parameters:
+       -  name: updated
+          in: path
+          description: it is the order updated date
+          required: true
+          deprecated: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Basic User info for auth purpose
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Orderdescription'
+  '/orders/{id}':
+    get:
+      summary: order
+      description: get  the order details for the order id details
+      operationId: getorder
+      parameters:
+       -  name: id
+          in: path
+          description: it is return the order details in the given orderid
+          required: true
+          deprecated: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        
+        '200':
+          description: Basic User info for auth purpose
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orderDetails'
+    
+components:
+  schemas:
+    subcripDetails:
+      description: Basic User info for auth purpose
+      type: object
+      properties:
+        orderType:
+          type: string
+        orderReference:
+          type: string
+        fundproviderIdentifier:
+          type: string
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/subcription'
+    subcription:
+      description: Basic User info for auth purpose
+      type: object
+      properties: 
+        transactionType: 
+          type: string
+        fundIdentifier:
+          type: object
+          properties: 
+            type:
+              type: string
+            identifier:
+              type: string
+        orderAmount:
+          type: object
+          properties: 
+            amount: 
+              type: number
+            currency: 
+              type: string
+        accountDetails:
+          type: object
+          properties:
+            accountId:
+              type: string   
+    subcriptionResponce:
+      description: Basic User info for auth purpose
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        createdUtc:
+          type: string
+        updatedUtc:
+          type: string
+        submitDetails:
+          $ref: '#/components/schemas/subcripDetails'
+
+
+
+    redemptionDetails:
+      description: Basic User info for auth purpose
+      type: object
+      properties:
+        orderType:
+          type: string
+        orderReference:
+          type: string
+        fundproviderIdentifier:
+          type: string
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/redemption'
+    redemption:
+      description: Basic User info for auth purpose
+      type: object
+      properties: 
+        transactionType:
+          type: string
+        fundIdentifier:
+          type: object
+          properties:
+            type:
+              type: string
+            identifier:
+              type: string
+            name: 
+              type: string
+            supplementaryIdentifier:
+              type: string
+        unit: 
+          type: integer
+        requesttedSettlementCurrency:
+          type: string
+        requesttedNavCurrency:
+          type: string
+        chargeDetails:
+          type: object
+          properties: 
+            type:
+              type: string
+            rate:
+              type: string
+        commissionDetails:
+          type: object
+          properties:
+            type:
+              type: string
+            rate:
+              type: string
+            percentageWaived:
+              type: number
+        accountDetails:
+          type: object
+          properties:
+            accountId:
+              type: string
+            subAccount:
+              type: string
+            agentCode:
+              type: string
+        roundingDirection:
+            type: string
+        group1Or2Units:
+             type: string
+    redemptionResponce: 
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        createdUtc:
+          type: string
+        updatedUtc:
+          type: string
+        submitDetails:
+          $ref: '#/components/schemas/redemptionDetails'
+        
+    Orderdescription:
+      type: object
+      properties:
+        id: 
+          type: string
+        orderReference:
+          type: string
+        status:
+          type: string
+        createdUtc:
+          type: string
+        updatedUtc:
+          type: string
+       
+    transactionDetails:
+      type: object
+      properties:
+        transactionType:
+          type: string
+        dealReference:
+          type: string
+        units:
+          type: integer
+        grossAmount:
+          type: object
+          properties:
+            amount:
+              type: integer
+            currency:
+              type: string
+        settlementAmount:
+          type: object
+          properties:
+            amount:
+              type: integer
+            currency:
+              type: string
+        fundIdentifier:
+          type: object
+          properties:
+            type:
+              type: string
+            identifier:
+              type: string
+          
+        accountDetails:
+          type: object
+          properties:
+            accountId:
+              type: string
+        tradeDateTime:
+          type: string
+    orderDetails:
+      type: object
+      properties:
+        Responce:
+          oneOf:
+            - $ref: '#/components/schemas/subcriptionResponce'
+            - $ref: '#/components/schemas/redemptionResponce'
+        validationDetails:
+          type: object
+          properties:
+            valid:
+              type: boolean
+            createdUtc:
+              type: string
+            orderReference:
+              type: string
+        acceptDetails:
+          type: object
+          properties:
+            accepted:
+              type: boolean
+            createdUtc:
+              type: string
+            orderReference:
+              type: string
+            expectedTradeDateTime:
+              type: string
+            expectedCashSettlementDate:
+              type: string
+        confirmDetails:
+          type: object
+          properties:
+            createdUtc:
+              type: string
+            orderReference:
+              type: string
+            transactionDetails:
+              type: array
+              items:
+                $ref: '#/components/schemas/transactionDetails'
+                
+         
+
+
+
+
+          
+            
+          
+     
